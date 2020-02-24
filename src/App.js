@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import "./App.css";
 
-function App() {
+import SendSMSForm from "./components/SendSMSForm"
+import Statistics from "./components/Statistics"
+import StoreAPIKeys from "./components/StoreAPIKeys"
+
+export const SmsContext = React.createContext();
+
+
+const SmsContextProvider = (props) => {
+  const [apiKeyPublic, setapiKeyPublic] = useState("");
+  const [secretKey, setSecretKey] = useState("");
+  const [displayName, setDisplayName] = useState("");
+
+  let state = {
+    apiKeyPublic,
+    secretKey,
+    displayName,
+    updateKeyPublic: (currentTarget) => { setapiKeyPublic(currentTarget)},
+    updateSecretKey: (currentTarget) => { setSecretKey(currentTarget)},
+    updateDisplayName: (currentTarget) => { setDisplayName(currentTarget)}
+  }
+  return (
+    <SmsContext.Provider value={{state:state}}>
+      {props.children}
+    </SmsContext.Provider>
+  )
+}
+
+const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <SmsContextProvider>
+       <BrowserRouter>
+        <Switch>
+          <Route exact path="/statistics" component={Statistics} />
+          <Route exact path="/new-sms" component={SendSMSForm} />
+          <Route exact path="/store-api" component={StoreAPIKeys}/>
+          </Switch>
+      </BrowserRouter>
+      </SmsContextProvider>
     </div>
   );
-}
+};
 
 export default App;
