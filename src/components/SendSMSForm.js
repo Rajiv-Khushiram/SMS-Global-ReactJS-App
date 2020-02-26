@@ -12,6 +12,9 @@ const { TextArea } = Input;
 //   margin: 20px;
 // `;
 
+const CustomForm = styled(Form)`
+min-width: 400px;
+`;
 
 const Wrapper = styled.div`
   display:flex;
@@ -105,7 +108,7 @@ const SendSMSForm = props => {
         <Wrapper><h1>Store your API keys first</h1></Wrapper>
       ) : (
         <Wrapper>
-        <Form onSubmit={handleSubmit} className="login-form">
+        <CustomForm onSubmit={handleSubmit} className="login-form">
           {/* <SmsContext.Consumer>
             {context => (
               // <KeysWrapper>
@@ -184,7 +187,7 @@ const SendSMSForm = props => {
               Send SMS
             </Button>
           </Form.Item>
-        </Form></Wrapper>
+        </CustomForm></Wrapper>
       )}
     </React.Fragment>
   );

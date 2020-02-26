@@ -6,29 +6,28 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { SmsContext } from "../App";
 import Navigation from "./Navigation";
+import moment from "moment"
 import styled from "styled-components";
 
 const LinkWrapper = styled(Link)`
-margin-top:100px;
-position:relative;
-top: 20px;
+  margin-top: 100px;
+  position: relative;
+  top: 20px;
 `;
 
-
 const Wrapper = styled.div`
-  position:relative;
+  position: relative;
   margin: 20px auto;
-  text-align:center;
-`
+  text-align: center;
+`;
 
 const ErrorWrapper = styled.div`
-  position:relative;
+  position: relative;
   margin: 20px auto;
-  text-align:center;
-  max-width:400px;
-  font-size:32px;
-`
-
+  text-align: center;
+  max-width: 400px;
+  font-size: 32px;
+`;
 
 const Statistics = () => {
   const contextVal = useContext(SmsContext);
@@ -74,11 +73,9 @@ const Statistics = () => {
         .then(res => {
           notification.success({
             message: `Messages Fetched`,
-            description:` 👍 Good Job, You keys are correct`
+            description: ` 👍 Good Job, You keys are correct`
           });
           setMessages(res.data.messages);
-
-
 
           setTimeout(function() {
             setLoading(true);
@@ -111,7 +108,12 @@ const Statistics = () => {
     {
       title: "Time Sent",
       dataIndex: "dateTime",
-      key: "dateTime"
+      key: "dateTime",
+      render: dateTime => (
+        <span>
+            {moment(new Date(dateTime)).format("DD/MM/YYYY, h:mm:ss a")}
+        </span>
+      )
     },
     {
       title: "Message",
@@ -148,7 +150,7 @@ const Statistics = () => {
       <Navigation />
       {!apiKey && !secretKey ? (
         <Wrapper>
-        <h1>Store your API keys first</h1>
+          <h1>Store your API keys first</h1>
         </Wrapper>
       ) : (
         <Wrapper>
@@ -159,7 +161,13 @@ const Statistics = () => {
               {error ? (
                 <ErrorWrapper>
                   <Alert message="Incorrect API Keys" type="error" showIcon />
-                  <LinkWrapper to="/store-api"> <span role="img" aria-label="perservering">😣</span> Change API Keys</LinkWrapper>
+                  <LinkWrapper to="/store-api">
+                    {" "}
+                    <span role="img" aria-label="perservering">
+                      😣
+                    </span>{" "}
+                    Change API Keys
+                  </LinkWrapper>
                 </ErrorWrapper>
               ) : (
                 <Spin indicator={antIcon} />

@@ -94,12 +94,10 @@ const StoreAPIKeys = props => {
           </CustomFormItem>
           <CustomFormItem label="API Name:">
             {getFieldDecorator("brandName", {
-              rules: [  
-              ],
+    
               initialValue: brandName
             })(
               <Input
-                required
                 prefix={<Icon type="user" style={{ width: "50%" }} />}
                 placeholder="Name"
                 onChange={e => {
