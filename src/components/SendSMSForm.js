@@ -22,9 +22,10 @@ const Wrapper = styled.div`
 
 const SendSMSForm = props => {
   const contextVal = useContext(SmsContext);
+  const from = contextVal.state.displayName
+
   // const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const from = useState(contextVal.state.displayName)
   const [loading, setLoading] = useState(false);
 
   const [textInput, setTextInput] = useState("");
@@ -52,7 +53,6 @@ const SendSMSForm = props => {
     const authorizationHeader = getAuthorizationHeader();
     const headers =""
     const data = { message:textInput, origin:from, destination:to }
-
     return axios({
       url: `http://${host}${uri}`,
       method,

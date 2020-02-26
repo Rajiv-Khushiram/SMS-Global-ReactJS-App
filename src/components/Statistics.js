@@ -73,7 +73,7 @@ const Statistics = () => {
       })
         .then(res => {
           notification.success({
-            message: `Data`,
+            message: `Messages Fetched`,
             description:` 👍 Good Job, You keys are correct`
           });
           setMessages(res.data.messages);

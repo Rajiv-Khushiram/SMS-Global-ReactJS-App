@@ -60,7 +60,7 @@ const StoreAPIKeys = props => {
                 { required: true, message: "Remember to fill in the title" },
                 { whitespace: true, message: "Remember to fill in the title" }
               ],
-              initialValue: publicKey // Default Value Settings
+              initialValue: publicKey 
             })(
               <Input
                 required
@@ -78,7 +78,7 @@ const StoreAPIKeys = props => {
                 { required: true, message: "Remember to fill in the title" },
                 { whitespace: true, message: "Remember to fill in the title" }
               ],
-              initialValue: secretKey // Default Value Settings
+              initialValue: secretKey
             })(
               <Input
                 required
@@ -97,7 +97,7 @@ const StoreAPIKeys = props => {
                 { required: true, message: "Remember to fill in the title" },
                 { whitespace: true, message: "Remember to fill in the title" }
               ],
-              initialValue: displayName // Default Value Settings
+              initialValue: displayName
             })(
               <Input
                 required
