@@ -11,14 +11,17 @@ const StoreAPIKeys = props => {
   const [secretKey, setSecret] = useState(context.state.secretKey);
   const [displayName, setdisplayName] = useState(context.state.displayName);
 
-
   const openNotification = placement => {
-    notification.info({
-      message: `Notification`,
-      description:
-        'Well done! Keys Saved!  ',
-      placement,
+    notification.success({
+      message: `✔ Key saved`,
+      placement
     });
+    setTimeout(function(){ 
+      notification.warning({
+        message: `If you refresh your browser, your keys will be cleared `,
+        placement
+      });
+     }, 1000);
   };
 
   const submitForm = e => {
@@ -26,7 +29,7 @@ const StoreAPIKeys = props => {
     context.state.updateKeyPublic(publicKey);
     context.state.updateSecretKey(secretKey);
     context.state.updateDisplayName(displayName);
-    openNotification('topRight')
+    openNotification("topRight");
   };
 
   const { getFieldDecorator } = props.form;
@@ -34,70 +37,43 @@ const StoreAPIKeys = props => {
   return (
     <React.Fragment>
       <Navigation />
-      
-      <Form onSubmit={submitForm} className="login-form">
-  
-        <Form.Item>
-          PublicKey
-          {getFieldDecorator("publicKey", {
-            rules: [
-              {
-                required: true,
-              }
-            ]
-          })(
-            <Input
-              required
-              placeholder={publicKey}
-              onChange={e => {
-                setPub(e.target.value);
-              }}
-            />
-          )}
+
+      <Form onSubmit={submitForm}  className="login-form">
+        <Form.Item value >
+        <Input
+          required
+          placeholder="Public Key"
+          onChange={e => {
+            setPub(e.target.value);
+          }}
+          value={publicKey}
+          
+        />
         </Form.Item>
         <Form.Item>
-          Secret Key
-          {getFieldDecorator("secretKey", {
-            rules: [
-              {
-                required: true,
-              }
-            ]
-          })(
-            <Input
-              required
-              placeholder={secretKey}
-              onChange={e => {
-                setSecret(e.target.value);
-              }}
-
-            />
-          )}
+          <Input
+            required
+            placeholder="Secret Key"
+            onChange={e => {
+              setSecret(e.target.value);
+            }}
+            value={secretKey}
+          />
         </Form.Item>
         <Form.Item>
-          Name:
-          {getFieldDecorator("displayName", {
-            rules: [
-              {
-                required: true,
-              }
-            ]
-          })(
-            <Input
-              required
-              placeholder={displayName}
-              onChange={e => {
-                setdisplayName(e.target.value);
-              }}
-
-            />
-          )}
+          <Input
+            required
+            placeholder="Name"
+            onChange={e => {
+              setdisplayName(e.target.value);
+            }}
+            value={displayName}
+          />
         </Form.Item>
         <Button type="primary" htmlType="submit" className="login-form-button">
-          Save Details 
+          Save Details
         </Button>
       </Form>
-     
     </React.Fragment>
   );
 };
