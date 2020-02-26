@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 
 const SendSMSForm = props => {
   const contextVal = useContext(SmsContext);
-  const from = contextVal.state.displayName
+  const [from, setFrom] = useState(contextVal.state.displayName)
 
   // const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -53,6 +53,7 @@ const SendSMSForm = props => {
     const authorizationHeader = getAuthorizationHeader();
     const headers =""
     const data = { message:textInput, origin:from, destination:to }
+    console.log(data.origin)
     return axios({
       url: `http://${host}${uri}`,
       method,
@@ -97,8 +98,6 @@ const SendSMSForm = props => {
     await postSMS()
   };
 
-
-
   return (
     <React.Fragment>
       <Navigation />
@@ -118,6 +117,24 @@ const SendSMSForm = props => {
             )}
           </SmsContext.Consumer> */}
         
+        <Form.Item label="From" >
+            {getFieldDecorator("from", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please input the recipient phone number!"
+                }
+              ]
+            })(
+              <Input
+                prefix={
+                  <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
+                }
+                placeholder="Sender No."
+                onChange={e => setFrom(e.target.value)}
+              />
+            )}
+          </Form.Item>  
           <Form.Item label="To" >
             {getFieldDecorator("to", {
               rules: [
@@ -131,7 +148,7 @@ const SendSMSForm = props => {
                 prefix={
                   <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
                 }
-                placeholder="Recipient number"
+                placeholder="Recipient No."
                 onChange={e => setTo(e.target.value)}
               />
             )}

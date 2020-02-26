@@ -14,14 +14,18 @@ const SmsContextProvider = (props) => {
   const [apiKeyPublic, setapiKeyPublic] = useState("");
   const [secretKey, setSecretKey] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [brandName, setBrandName] = useState("");
 
   let state = {
     apiKeyPublic,
     secretKey,
     displayName,
+    brandName,
+
     updateKeyPublic: (currentTarget) => { setapiKeyPublic(currentTarget)},
     updateSecretKey: (currentTarget) => { setSecretKey(currentTarget)},
-    updateDisplayName: (currentTarget) => { setDisplayName(currentTarget)}
+    updateDisplayName: (currentTarget) => { setDisplayName(currentTarget)},
+    updateBrandName: (currentTarget) => { setBrandName(currentTarget)}
   }
   return (
     <SmsContext.Provider value={{state:state}}>

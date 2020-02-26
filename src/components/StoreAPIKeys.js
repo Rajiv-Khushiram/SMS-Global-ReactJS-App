@@ -25,24 +25,25 @@ const StoreAPIKeys = props => {
   const context = useContext(SmsContext);
   const [publicKey, setPub] = useState(context.state.apiKeyPublic);
   const [secretKey, setSecret] = useState(context.state.secretKey);
-  const [displayName, setdisplayName] = useState(context.state.displayName);
+  const [brandName, setBrandName] = useState(context.state.brandName)
 
   const submitNotifications = () => {
     notification.success({
       message: `✔ Key saved`
     });
-    setTimeout(function() {
-      notification.warning({
-        message: `Refresh your browser to clear your keys `
-      });
-    }, 1000);
+    // setTimeout(function() {
+    //   notification.warning({
+    //     message: `Refresh your browser to clear your keys `
+    //   });
+    // }, 1000);
   };
 
   const submitForm = e => {
     e.preventDefault();
     context.state.updateKeyPublic(publicKey);
     context.state.updateSecretKey(secretKey);
-    context.state.updateDisplayName(displayName);
+    // context.state.updateDisplayName(displayName);
+    context.state.updateBrandName(brandName);
     submitNotifications();
   };
 
@@ -91,22 +92,19 @@ const StoreAPIKeys = props => {
               />
             )}
           </CustomFormItem>
-          <CustomFormItem label="Name:">
-            {getFieldDecorator("displayName", {
-              rules: [
-                { required: true, message: "Remember to fill in the title" },
-                { whitespace: true, message: "Remember to fill in the title" }
+          <CustomFormItem label="API Name:">
+            {getFieldDecorator("brandName", {
+              rules: [  
               ],
-              initialValue: displayName
+              initialValue: brandName
             })(
               <Input
                 required
                 prefix={<Icon type="user" style={{ width: "50%" }} />}
                 placeholder="Name"
                 onChange={e => {
-                  setdisplayName(e.target.value);
-                }}
-                
+                  setBrandName(e.target.value);
+                }}     
               />
             )}
           </CustomFormItem>
