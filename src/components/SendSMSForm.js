@@ -1,5 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import Crypto from 'crypto-js';
 import { Form, Input, Button, Icon, notification } from "antd";
@@ -9,15 +8,23 @@ import styled from "styled-components";
 
 const { TextArea } = Input;
 
-const KeysWrapper = styled.div`
-  margin: 20px;
-`;
+// const KeysWrapper = styled.div`
+//   margin: 20px;
+// `;
+
+
+const Wrapper = styled.div`
+  display:flex;
+  justify-content: center;
+  position:relative;
+  margin: 20px auto;
+`
 
 const SendSMSForm = props => {
   const contextVal = useContext(SmsContext);
-  const [from, setFrom] = useState("");
+  // const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-
+  const from = useState(contextVal.state.displayName)
   const [loading, setLoading] = useState(false);
 
   const [textInput, setTextInput] = useState("");
@@ -26,44 +33,22 @@ const SendSMSForm = props => {
   const method ='POST'
   const host = 'api.smsglobal.com';
   const uri ='/v2/sms/'
-  const  apiKey  = ""
-  const  apiSecret = ""
-
-  async function getUsers() {
-   return axios.get(`https://jsonplaceholder.typicode.com/users`)
-    .then(res => {
-      const persons = res.data;
-      notification.success({
-        message: `USERS FETCHED `
-      })
-      console.log(persons)
-      setTimeout(function(){ setLoading(false); }, 1000);
-      return res.data;
-    })
-    .catch(async function (error) {
-      notification.error({
-        message: `USERS NOT FETCHED  ${error.response.status}, ${error.response.data}, ${JSON.stringify(error.response.headers)}`
-      })
-      setTimeout(function(){ setLoading(false); }, 1000);
-      console.log(error.response.headers)
-    })
-  }
+  const  apiKey  = contextVal.state.apiKeyPublic 
+  const secretKey =  contextVal.state.secretKey
 
   const getAuthorizationHeader = () => {
-
     const ts = Math.floor(new Date().getTime() / 1000);
     const nonce = Math.floor(Math.random() * 1e16);
-
+  
     const signature = [ts, nonce, method, uri, host, 80];
     const macString = `${signature.join(`\n`)}\n\n`;
-    const macHash = Crypto.HmacSHA256(macString, apiSecret);
+    const macHash = Crypto.HmacSHA256(macString, secretKey);
     const macBase64 = Crypto.enc.Base64.stringify(macHash);
-
+  
     return `MAC id="${apiKey}", ts="${ts}", nonce="${nonce}", mac="${macBase64}"`;
   };
 
   async function postSMS() {
-
     const authorizationHeader = getAuthorizationHeader();
     const headers =""
     const data = { message:textInput, origin:from, destination:to }
@@ -80,20 +65,23 @@ const SendSMSForm = props => {
       }
     })
     .then(res => {
-       const persons = res.data;
+      //  const messages = res.data;
+      //  console.log(messages)
        notification.success({
-         message: `${JSON.stringify(res)} `
+         message: `Message Sent! `
        })
-       console.log(persons)
        setTimeout(function(){ setLoading(false); }, 1000);
+
        return res.data;
      })
      .catch(async function (error) {
        notification.error({
-         message: `USERS NOT FETCHED  ${error.response.status}, ${error.response.data}, ${JSON.stringify(error.response.headers)}`
+                 //  ${error.response.status}, ${error.response.data}, ${JSON.stringify(error.response.headers)}
+         message: `SMS NOT SENT `,
+         description:`Make sure your keys are correct or that you have enough credit`
        })
        setTimeout(function(){ setLoading(false); }, 1000);
-       console.log(error.response.headers)
+      //  console.log(error.response.headers)
      })
    }
 
@@ -101,21 +89,12 @@ const SendSMSForm = props => {
     e.preventDefault();
 
     if (textInput.length > 160) {
-      const blockArray = textInput.match(/.{1,153}/g);
-
-      alert("message will be sent in parts");
+      notification.info({
+        message: `Message will be sent in multi-parts `
+      })
+      
     }
     await postSMS()
-
-    // if (await getUsers().length) {
-    // notification.error({
-    //   message: `API NOT FETCHED `
-    // })}
-    // else {
-    //   notification.success({
-    //     message: `Success fetched`
-    //   })
-    // }
   };
 
 
@@ -124,21 +103,22 @@ const SendSMSForm = props => {
     <React.Fragment>
       <Navigation />
       {!contextVal.state.apiKeyPublic || !contextVal.state.secretKey ? (
-        <h1>To send a message you need to store your API keys.</h1>
+        <Wrapper><h1>To send a message you need to store your API keys.</h1></Wrapper>
       ) : (
+        <Wrapper>
         <Form onSubmit={handleSubmit} className="login-form">
-          <SmsContext.Consumer>
+          {/* <SmsContext.Consumer>
             {context => (
-              <KeysWrapper>
-                <p>Name: {context.state.displayName}</p>
-                Public Key: {context.state.apiKeyPublic}
-                {",  "}
-                Secret Key: {context.state.secretKey}
-              </KeysWrapper>
+              // <KeysWrapper>
+              //   <p>Name: {context.state.displayName}</p>
+              //   Public Key: {context.state.apiKeyPublic}
+              //   {",  "}
+              //   Secret Key: {context.state.secretKey}
+              // </KeysWrapper>
             )}
-          </SmsContext.Consumer>
-          To:
-          <Form.Item>
+          </SmsContext.Consumer> */}
+        
+          <Form.Item label="To" >
             {getFieldDecorator("to", {
               rules: [
                 {
@@ -155,28 +135,8 @@ const SendSMSForm = props => {
                 onChange={e => setTo(e.target.value)}
               />
             )}
-          </Form.Item>
-          From:
-          <Form.Item>
-            {getFieldDecorator("from", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input the senders phone number!"
-                }
-              ]
-            })(
-              <Input
-                prefix={
-                  <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
-                }
-                placeholder="Sender number"
-                onChange={e => setFrom(e.target.value)}
-              />
-            )}
-          </Form.Item>
-          Message Input:
-          <Form.Item>
+          </Form.Item>       
+          <Form.Item label="Text:">
             {getFieldDecorator("textInput", {
               rules: [
                 {
@@ -196,6 +156,7 @@ const SendSMSForm = props => {
           </Form.Item>
           <Form.Item>
             <Button
+              style={{"float":"right"}}
               type="primary"
               htmlType="submit"
               className="login-form-button"
@@ -206,7 +167,7 @@ const SendSMSForm = props => {
               Send SMS
             </Button>
           </Form.Item>
-        </Form>
+        </Form></Wrapper>
       )}
     </React.Fragment>
   );

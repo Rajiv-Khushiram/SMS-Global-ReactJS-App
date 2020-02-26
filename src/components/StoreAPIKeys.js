@@ -1,9 +1,25 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
-import { Form, Input, Button, notification } from "antd";
+import { Form, Input, Button, notification, Icon } from "antd";
 import "antd/dist/antd.css";
 import { SmsContext } from "../App";
 import Navigation from "./Navigation";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  display:flex;
+  position:relative;
+  margin: 0 auto;
+  justify-content: center;
+`;
+
+const CustomForm = styled(Form)`
+min-width: 300px;
+`;
+
+const CustomFormItem = styled(Form.Item)`
+margin-bottom: 0px;
+`;
+
 
 const StoreAPIKeys = props => {
   const context = useContext(SmsContext);
@@ -11,17 +27,15 @@ const StoreAPIKeys = props => {
   const [secretKey, setSecret] = useState(context.state.secretKey);
   const [displayName, setdisplayName] = useState(context.state.displayName);
 
-  const openNotification = placement => {
+  const submitNotifications = () => {
     notification.success({
-      message: `✔ Key saved`,
-      placement
+      message: `✔ Key saved`
     });
-    setTimeout(function(){ 
+    setTimeout(function() {
       notification.warning({
-        message: `If you refresh your browser, your keys will be cleared `,
-        placement
+        message: `Refresh your browser to clear your keys `
       });
-     }, 1000);
+    }, 1000);
   };
 
   const submitForm = e => {
@@ -29,51 +43,83 @@ const StoreAPIKeys = props => {
     context.state.updateKeyPublic(publicKey);
     context.state.updateSecretKey(secretKey);
     context.state.updateDisplayName(displayName);
-    openNotification("topRight");
+    submitNotifications();
   };
 
   const { getFieldDecorator } = props.form;
 
+  
   return (
     <React.Fragment>
       <Navigation />
-
-      <Form onSubmit={submitForm}  className="login-form">
-        <Form.Item value >
-        <Input
-          required
-          placeholder="Public Key"
-          onChange={e => {
-            setPub(e.target.value);
-          }}
-          value={publicKey}
-          
-        />
-        </Form.Item>
-        <Form.Item>
-          <Input
-            required
-            placeholder="Secret Key"
-            onChange={e => {
-              setSecret(e.target.value);
-            }}
-            value={secretKey}
-          />
-        </Form.Item>
-        <Form.Item>
-          <Input
-            required
-            placeholder="Name"
-            onChange={e => {
-              setdisplayName(e.target.value);
-            }}
-            value={displayName}
-          />
-        </Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
-          Save Details
-        </Button>
-      </Form>
+      <Wrapper>
+        <CustomForm onSubmit={submitForm} className="login-form">
+          <CustomFormItem style={{}} label="Public Key" value>
+            {getFieldDecorator("publicKey", {
+              rules: [
+                { required: true, message: "Remember to fill in the title" },
+                { whitespace: true, message: "Remember to fill in the title" }
+              ],
+              initialValue: publicKey // Default Value Settings
+            })(
+              <Input
+                required
+                prefix={<Icon type="key" style={{ width: "50%" }} />}
+                placeholder="..."
+                onChange={e => {
+                  setPub(e.target.value);
+                }}
+              />
+            )}
+          </CustomFormItem>
+          <CustomFormItem label="Secret Key">
+            {getFieldDecorator("secretKey", {
+              rules: [
+                { required: true, message: "Remember to fill in the title" },
+                { whitespace: true, message: "Remember to fill in the title" }
+              ],
+              initialValue: secretKey // Default Value Settings
+            })(
+              <Input
+                required
+                prefix={<Icon type="lock" style={{ width: "50%" }} />}
+                type="password"
+                placeholder="..."
+                onChange={e => {
+                  setSecret(e.target.value);
+                }}
+              />
+            )}
+          </CustomFormItem>
+          <CustomFormItem label="Name:">
+            {getFieldDecorator("displayName", {
+              rules: [
+                { required: true, message: "Remember to fill in the title" },
+                { whitespace: true, message: "Remember to fill in the title" }
+              ],
+              initialValue: displayName // Default Value Settings
+            })(
+              <Input
+                required
+                prefix={<Icon type="user" style={{ width: "50%" }} />}
+                placeholder="Name"
+                onChange={e => {
+                  setdisplayName(e.target.value);
+                }}
+                
+              />
+            )}
+          </CustomFormItem>
+          <Button
+            style={{ "float": "right", "top":" 10px" }}
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+          >
+            Save
+          </Button>
+        </CustomForm>
+      </Wrapper>
     </React.Fragment>
   );
 };
