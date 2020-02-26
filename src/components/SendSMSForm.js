@@ -103,7 +103,7 @@ const SendSMSForm = props => {
     <React.Fragment>
       <Navigation />
       {!contextVal.state.apiKeyPublic || !contextVal.state.secretKey ? (
-        <Wrapper><h1>To send a message you need to store your API keys.</h1></Wrapper>
+        <Wrapper><h1>Store your API keys first</h1></Wrapper>
       ) : (
         <Wrapper>
         <Form onSubmit={handleSubmit} className="login-form">

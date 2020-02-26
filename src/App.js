@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Navigation from "./components/Navigation";
 import "./App.css";
 
 import SendSMSForm from "./components/SendSMSForm"
@@ -35,9 +36,11 @@ const App = () => {
       <SmsContextProvider>
        <BrowserRouter>
         <Switch>
+          <Route exact path="/" component={Navigation}/>  
           <Route exact path="/statistics" component={Statistics} />
           <Route exact path="/new-sms" component={SendSMSForm} />
           <Route exact path="/store-api" component={StoreAPIKeys}/>
+
           </Switch>
       </BrowserRouter>
       </SmsContextProvider>

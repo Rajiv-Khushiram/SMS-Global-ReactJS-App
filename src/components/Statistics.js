@@ -148,7 +148,7 @@ const Statistics = () => {
       <Navigation />
       {!apiKey && !secretKey ? (
         <Wrapper>
-        <h1>Store your API keys First</h1>
+        <h1>Store your API keys first</h1>
         </Wrapper>
       ) : (
         <Wrapper>
