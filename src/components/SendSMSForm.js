@@ -82,10 +82,10 @@ const SendSMSForm = props => {
        notification.error({
                  //  ${error.response.status}, ${error.response.data}, ${JSON.stringify(error.response.headers)}
          message: `SMS NOT SENT `,
-         description:`Make sure your keys are correct or that you have enough credit`
+         description:`Make sure your keys are correct or that you have enough credit `
        })
        setTimeout(function(){ setLoading(false); }, 1000);
-      //  console.log(error.response.headers)
+      //  console.log(`${JSON.stringify(error.response.data)}`)
      })
    }
 
